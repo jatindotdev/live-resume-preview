@@ -28,7 +28,8 @@ export default function Page() {
               <a
                 className="inline-flex gap-x-1.5 align-baseline leading-none hover:underline"
                 href={RESUME_DATA.locationLink}
-                target="_blank" rel="noreferrer"
+                target="_blank"
+                rel="noreferrer"
               >
                 <GlobeIcon className="h-3 w-3" />
                 {RESUME_DATA.location}
@@ -115,7 +116,9 @@ export default function Page() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="text-sm">{education.degree}</CardContent>
+                <CardContent className="text-sm">
+                  {education.degree}
+                </CardContent>
               </Card>
             );
           })}
@@ -148,7 +151,7 @@ export default function Page() {
                         ))}
                       </span>
                     </h3>
-                    <div className="text-sm tabular-nums text-gray-500 whitespace-nowrap">
+                    <div className="whitespace-nowrap text-sm tabular-nums text-gray-500">
                       {work.start} - {work.end}
                     </div>
                   </div>
@@ -198,7 +201,7 @@ export default function Page() {
                         ))}
                       </span>
                     </h3>
-                    <div className="text-sm tabular-nums text-gray-500 whitespace-nowrap">
+                    <div className="whitespace-nowrap text-sm tabular-nums text-gray-500">
                       {org.start} - {org.end}
                     </div>
                   </div>
