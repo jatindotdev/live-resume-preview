@@ -28,7 +28,7 @@ export default function Page() {
               <a
                 className="inline-flex gap-x-1.5 align-baseline leading-none hover:underline"
                 href={RESUME_DATA.locationLink}
-                target="_blank"
+                target="_blank" rel="noreferrer"
               >
                 <GlobeIcon className="h-3 w-3" />
                 {RESUME_DATA.location}
@@ -115,7 +115,7 @@ export default function Page() {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="mt-2">{education.degree}</CardContent>
+                <CardContent className="text-sm">{education.degree}</CardContent>
               </Card>
             );
           })}
@@ -126,11 +126,16 @@ export default function Page() {
             return (
               <Card key={work.company}>
                 <CardHeader>
-                  <div className="flex items-center justify-between gap-x-2 text-base">
-                    <h3 className="inline-flex flex-wrap items-center gap-x-1 gap-y-2 font-semibold leading-none">
-                      <a className="hover:underline" href={work.link}>
-                        {work.company}
-                      </a>
+                  <div className="flex items-start justify-between gap-x-2 text-base">
+                    <h3 className="inline-flex flex-wrap items-start gap-x-2 gap-y-2 font-semibold leading-none">
+                      <div className="space-y-1">
+                        <a className="hover:underline" href={work.link}>
+                          {work.company}
+                        </a>
+                        <h4 className="font-mono text-sm leading-none">
+                          {work.title}
+                        </h4>
+                      </div>
                       <span className="inline-flex gap-x-1">
                         {work.badges.map((badge) => (
                           <Badge
@@ -143,18 +148,14 @@ export default function Page() {
                         ))}
                       </span>
                     </h3>
-                    <div className="text-sm tabular-nums text-gray-500">
+                    <div className="text-sm tabular-nums text-gray-500 whitespace-nowrap">
                       {work.start} - {work.end}
                     </div>
                   </div>
-
-                  <h4 className="font-mono text-sm leading-none">
-                    {work.title}
-                  </h4>
                 </CardHeader>
-                <CardContent className="mt-2 text-xs">
+                <CardContent className="text-sm">
                   {Array.isArray(work.description) ? (
-                    <ul className="my-2 ml-4 list-disc">
+                    <ul className="ml-4 list-disc">
                       {work.description.map((description) => (
                         <li className="mt-1" key={description}>
                           {description}
@@ -175,12 +176,16 @@ export default function Page() {
             return (
               <Card key={org.name}>
                 <CardHeader>
-                  <div className="flex items-center justify-between gap-x-2 text-base">
-                    <h3 className="inline-flex flex-wrap items-center gap-x-1 gap-y-2 font-semibold leading-none">
-                      <a className="hover:underline" href={org.link}>
-                        {org.name}
-                      </a>
-
+                  <div className="flex items-start justify-between gap-x-2 text-base">
+                    <h3 className="inline-flex flex-wrap items-start gap-x-1 gap-y-2 font-semibold leading-none">
+                      <div className="space-y-1">
+                        <a className="hover:underline" href={org.link}>
+                          {org.name}
+                        </a>
+                        <h4 className="font-mono text-sm leading-none">
+                          {org.title}
+                        </h4>
+                      </div>
                       <span className="inline-flex gap-x-1">
                         {org.badges.map((badge) => (
                           <Badge
@@ -193,18 +198,14 @@ export default function Page() {
                         ))}
                       </span>
                     </h3>
-                    <div className="text-sm tabular-nums text-gray-500">
+                    <div className="text-sm tabular-nums text-gray-500 whitespace-nowrap">
                       {org.start} - {org.end}
                     </div>
                   </div>
-
-                  <h4 className="font-mono text-sm leading-none">
-                    {org.title}
-                  </h4>
                 </CardHeader>
-                <CardContent className="mt-2 text-xs">
+                <CardContent className="text-sm">
                   {Array.isArray(org.description) ? (
-                    <ul className="my-2 ml-4 list-disc">
+                    <ul className="ml-4 list-disc">
                       {org.description.map((description) => (
                         <li className="mt-1" key={description}>
                           {description}
@@ -231,7 +232,7 @@ export default function Page() {
                         {skill.label}
                       </h3>
                     </CardHeader>
-                    <CardContent className="mt-3 flex flex-wrap gap-1">
+                    <CardContent className="flex flex-wrap gap-1">
                       {skill.skills.map((skill) => (
                         <Badge key={skill}>{skill}</Badge>
                       ))}
@@ -242,10 +243,9 @@ export default function Page() {
             </div>
           </div>
         </Section>
-
         <Section className="scroll-mb-16">
           <h2 className="text-xl font-bold">Projects</h2>
-          <div className="-mx-3 grid grid-cols-1 gap-3 print:grid-cols-2 print:gap-2 md:grid-cols-2">
+          <div className="-mx-4 grid grid-cols-1 gap-3 print:grid-cols-2 print:gap-2 md:grid-cols-2">
             {RESUME_DATA.projects.map((project) => {
               return (
                 <ProjectCard
@@ -260,7 +260,6 @@ export default function Page() {
           </div>
         </Section>
       </section>
-
       <CommandMenu
         links={[
           {
