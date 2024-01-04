@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export interface ResumeData {
   name: string;
   initials: string;
@@ -13,7 +15,7 @@ export interface ResumeData {
     social: {
       name: string;
       url: string;
-      icon: (props: React.SVGProps<SVGSVGElement>) => React.JSX.Element;
+      icon: LucideIcon
     }[];
   };
   education: {

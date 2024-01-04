@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { CommandMenu } from "@/components/command-menu";
 import { Metadata } from "next";
 import { Section } from "@/components/ui/section";
-import { GlobeIcon, MailIcon, PhoneIcon } from "lucide-react";
+import { DownloadIcon, GlobeIcon, MailIcon, PhoneIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RESUME_DATA } from "@/data/resume-data";
 import { ProjectCard } from "@/components/project-card";
@@ -73,6 +73,16 @@ export default function Page() {
                   </a>
                 </Button>
               ))}
+              <Button
+                  className="h-8 w-8"
+                  variant="outline"
+                  size="icon"
+                  asChild
+                >
+                  <a href="/cv.pdf" target="_blank" rel="noreferrer" download="jatin-kumar.pdf">
+                    <DownloadIcon className="h-4 w-4" />
+                  </a>
+                </Button>
             </div>
             <div className="hidden flex-col gap-x-1 font-mono text-sm text-muted-foreground print:flex">
               {RESUME_DATA.contact.email ? (

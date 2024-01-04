@@ -1,7 +1,5 @@
-import { GitHubIcon } from "@/components/icons/GitHubIcon";
-import { LinkedInIcon } from "@/components/icons/LinkedInIcon";
-import { XIcon } from "@/components/icons/XIcon";
 import { ResumeData } from "@/lib/types";
+import { GithubIcon, LinkedinIcon, TwitterIcon } from "lucide-react";
 
 export const RESUME_DATA: ResumeData = {
   name: "Jatin Kumar",
@@ -19,17 +17,17 @@ export const RESUME_DATA: ResumeData = {
       {
         name: "GitHub",
         url: "https://github.com/jatindotdev",
-        icon: GitHubIcon,
+        icon: GithubIcon,
       },
       {
         name: "LinkedIn",
         url: "https://linkedin.com/in/jatinnkumar",
-        icon: LinkedInIcon,
+        icon: LinkedinIcon,
       },
       {
         name: "Twitter",
         url: "https://twitter.com/jatindotdev",
-        icon: XIcon,
+        icon: TwitterIcon,
       },
     ],
   },
