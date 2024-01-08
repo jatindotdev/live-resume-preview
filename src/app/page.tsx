@@ -33,56 +33,56 @@ export default function Page() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <GlobeIcon className="h-3 w-3" />
+                <GlobeIcon className="size-3" />
                 {RESUME_DATA.location}
               </a>
             </p>
             <div className="flex gap-x-1 pt-1 font-mono text-sm text-muted-foreground print:hidden">
               {RESUME_DATA.contact.email ? (
                 <Button
-                  className="h-8 w-8"
+                  className="size-8"
                   variant="outline"
                   size="icon"
                   asChild
                 >
                   <a href={`mailto:${RESUME_DATA.contact.email}`}>
-                    <MailIcon className="h-4 w-4" />
+                    <MailIcon className="size-4" />
                   </a>
                 </Button>
               ) : null}
               {RESUME_DATA.contact.tel ? (
                 <Button
-                  className="h-8 w-8"
+                  className="size-8"
                   variant="outline"
                   size="icon"
                   asChild
                 >
                   <a href={`tel:${RESUME_DATA.contact.tel}`}>
-                    <PhoneIcon className="h-4 w-4" />
+                    <PhoneIcon className="size-4" />
                   </a>
                 </Button>
               ) : null}
               {RESUME_DATA.contact.social.map(social => (
                 <Button
                   key={social.name}
-                  className="h-8 w-8"
+                  className="size-8"
                   variant="outline"
                   size="icon"
                   asChild
                 >
                   <a href={social.url} target="_blank" rel="noreferrer">
-                    <social.icon className="h-4 w-4" />
+                    <social.icon className="size-4" />
                   </a>
                 </Button>
               ))}
-              <Button className="h-8 w-8" variant="outline" size="icon" asChild>
+              <Button className="size-8" variant="outline" size="icon" asChild>
                 <a
                   href="/cv.pdf"
                   target="_blank"
                   rel="noreferrer"
                   download="jatin-kumar.pdf"
                 >
-                  <DownloadIcon className="h-4 w-4" />
+                  <DownloadIcon className="size-4" />
                 </a>
               </Button>
             </div>
