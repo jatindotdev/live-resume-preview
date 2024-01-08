@@ -1,14 +1,14 @@
+import { ResumeData } from '@/lib/types';
+import { Badge } from './ui/badge';
 import {
   Card,
-  CardHeader,
   CardContent,
   CardDescription,
+  CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Badge } from "./ui/badge";
-import { ResumeData } from "@/lib/types";
+} from './ui/card';
 
-type Props = ResumeData["projects"][number];
+type Props = ResumeData['projects'][number];
 
 export function ProjectCard({ title, description, techStack, link }: Props) {
   return (
@@ -21,9 +21,9 @@ export function ProjectCard({ title, description, techStack, link }: Props) {
                 href={link.href}
                 target="_blank"
                 className="inline-flex items-center gap-1 hover:underline"
+                rel="noreferrer"
               >
-                {title}{" "}
-                <span className="h-1 w-1 rounded-full bg-green-500"></span>
+                {title} <span className="h-1 w-1 rounded-full bg-green-500" />
               </a>
             ) : (
               title
@@ -31,14 +31,14 @@ export function ProjectCard({ title, description, techStack, link }: Props) {
           </CardTitle>
           <div className="hidden font-mono text-xs underline print:visible">
             {link?.href
-              .replace("https://", "")
-              .replace("www.", "")
-              .replace("/", "")}
+              .replace('https://', '')
+              .replace('www.', '')
+              .replace('/', '')}
           </div>
           <CardDescription className="font-mono text-xs">
             {Array.isArray(description) ? (
               <ul className="my-2 ml-4 list-disc">
-                {description.map((description) => (
+                {description.map(description => (
                   <li className="mt-1" key={description}>
                     {description}
                   </li>
@@ -52,7 +52,7 @@ export function ProjectCard({ title, description, techStack, link }: Props) {
       </CardHeader>
       <CardContent className="mt-auto flex">
         <div className="mt-2 flex flex-wrap gap-1">
-          {techStack.map((stack) => (
+          {techStack.map(stack => (
             <Badge
               className="px-1 py-0 text-[10px]"
               variant="secondary"

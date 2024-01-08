@@ -1,13 +1,13 @@
-import { Analytics } from "@vercel/analytics/react";
-import { Inter } from "next/font/google";
+import { Analytics } from '@vercel/analytics/react';
+import { Inter } from 'next/font/google';
 
-import "./globals.css";
-import React from "react";
+import React from 'react';
+import './globals.css';
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export default function RootLayout({

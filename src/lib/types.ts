@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import type { LucideIcon } from 'lucide-react';
 
 export interface ResumeData {
   name: string;
@@ -15,7 +15,7 @@ export interface ResumeData {
     social: {
       name: string;
       url: string;
-      icon: LucideIcon
+      icon: LucideIcon;
     }[];
   };
   education: {

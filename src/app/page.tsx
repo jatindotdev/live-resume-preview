@@ -1,13 +1,13 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CommandMenu } from "@/components/command-menu";
-import { Metadata } from "next";
-import { Section } from "@/components/ui/section";
-import { DownloadIcon, GlobeIcon, MailIcon, PhoneIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { RESUME_DATA } from "@/data/resume-data";
-import { ProjectCard } from "@/components/project-card";
+import { CommandMenu } from '@/components/command-menu';
+import { ProjectCard } from '@/components/project-card';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Section } from '@/components/ui/section';
+import { RESUME_DATA } from '@/data/resume-data';
+import { DownloadIcon, GlobeIcon, MailIcon, PhoneIcon } from 'lucide-react';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: `${RESUME_DATA.name} | ${RESUME_DATA.about}`,
@@ -60,7 +60,7 @@ export default function Page() {
                   </a>
                 </Button>
               ) : null}
-              {RESUME_DATA.contact.social.map((social) => (
+              {RESUME_DATA.contact.social.map(social => (
                 <Button
                   key={social.name}
                   className="h-8 w-8"
@@ -73,16 +73,16 @@ export default function Page() {
                   </a>
                 </Button>
               ))}
-              <Button
-                  className="h-8 w-8"
-                  variant="outline"
-                  size="icon"
-                  asChild
+              <Button className="h-8 w-8" variant="outline" size="icon" asChild>
+                <a
+                  href="/cv.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  download="jatin-kumar.pdf"
                 >
-                  <a href="/cv.pdf" target="_blank" rel="noreferrer" download="jatin-kumar.pdf">
-                    <DownloadIcon className="h-4 w-4" />
-                  </a>
-                </Button>
+                  <DownloadIcon className="h-4 w-4" />
+                </a>
+              </Button>
             </div>
             <div className="hidden flex-col gap-x-1 font-mono text-sm text-muted-foreground print:flex">
               {RESUME_DATA.contact.email ? (
@@ -110,7 +110,7 @@ export default function Page() {
         </Section>
         <Section>
           <h2 className="text-xl font-bold">Education</h2>
-          {RESUME_DATA.education.map((education) => {
+          {RESUME_DATA.education.map(education => {
             return (
               <Card key={education.school}>
                 <CardHeader>
@@ -135,7 +135,7 @@ export default function Page() {
         </Section>
         <Section>
           <h2 className="text-xl font-bold">Work Experience</h2>
-          {RESUME_DATA.work.map((work) => {
+          {RESUME_DATA.work.map(work => {
             return (
               <Card key={work.company}>
                 <CardHeader>
@@ -150,7 +150,7 @@ export default function Page() {
                         </h4>
                       </div>
                       <span className="inline-flex gap-x-1">
-                        {work.badges.map((badge) => (
+                        {work.badges.map(badge => (
                           <Badge
                             variant="secondary"
                             className="align-middle text-xs"
@@ -169,7 +169,7 @@ export default function Page() {
                 <CardContent className="text-sm">
                   {Array.isArray(work.description) ? (
                     <ul className="ml-4 list-disc">
-                      {work.description.map((description) => (
+                      {work.description.map(description => (
                         <li className="mt-1" key={description}>
                           {description}
                         </li>
@@ -185,7 +185,7 @@ export default function Page() {
         </Section>
         <Section>
           <h2 className="text-xl font-bold">Organisations</h2>
-          {RESUME_DATA.organisations.map((org) => {
+          {RESUME_DATA.organisations.map(org => {
             return (
               <Card key={org.name}>
                 <CardHeader>
@@ -200,7 +200,7 @@ export default function Page() {
                         </h4>
                       </div>
                       <span className="inline-flex gap-x-1">
-                        {org.badges.map((badge) => (
+                        {org.badges.map(badge => (
                           <Badge
                             variant="secondary"
                             className="align-middle text-xs"
@@ -219,7 +219,7 @@ export default function Page() {
                 <CardContent className="text-sm">
                   {Array.isArray(org.description) ? (
                     <ul className="ml-4 list-disc">
-                      {org.description.map((description) => (
+                      {org.description.map(description => (
                         <li className="mt-1" key={description}>
                           {description}
                         </li>
@@ -237,7 +237,7 @@ export default function Page() {
           <h2 className="text-xl font-bold">Skills</h2>
           <div className="flex flex-wrap gap-1">
             <div className="grid grid-cols-1 gap-3 print:grid-cols-2 print:gap-2 md:grid-cols-2">
-              {RESUME_DATA.skillset.map((skill) => {
+              {RESUME_DATA.skillset.map(skill => {
                 return (
                   <Card key={skill.label}>
                     <CardHeader>
@@ -246,7 +246,7 @@ export default function Page() {
                       </h3>
                     </CardHeader>
                     <CardContent className="flex flex-wrap gap-1">
-                      {skill.skills.map((skill) => (
+                      {skill.skills.map(skill => (
                         <Badge key={skill}>{skill}</Badge>
                       ))}
                     </CardContent>
@@ -259,7 +259,7 @@ export default function Page() {
         <Section className="scroll-mb-16">
           <h2 className="text-xl font-bold">Projects</h2>
           <div className="-mx-4 grid grid-cols-1 gap-3 print:grid-cols-2 print:gap-2 md:grid-cols-2">
-            {RESUME_DATA.projects.map((project) => {
+            {RESUME_DATA.projects.map(project => {
               return (
                 <ProjectCard
                   key={project.title}
@@ -277,9 +277,9 @@ export default function Page() {
         links={[
           {
             url: RESUME_DATA.personalWebsiteUrl,
-            title: "Personal Website",
+            title: 'Personal Website',
           },
-          ...RESUME_DATA.contact.social.map((socialMediaLink) => ({
+          ...RESUME_DATA.contact.social.map(socialMediaLink => ({
             url: socialMediaLink.url,
             title: socialMediaLink.name,
           })),
