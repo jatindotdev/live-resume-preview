@@ -34,7 +34,7 @@ export const RESUME_DATA: ResumeData = {
   education: [
     {
       school: 'SRM Institute Of Science And Technology',
-      degree: 'B.Tech in CSE',
+      degree: "Bachelor's Degree in Computer Science and Engineering",
       start: '2022',
       end: 'Present',
       link: 'https://srmist.edu.in/',

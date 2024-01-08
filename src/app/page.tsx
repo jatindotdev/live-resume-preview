@@ -1,13 +1,22 @@
+import WorkHeader from '@/components/work-header';
 import { CommandMenu } from '@/components/command-menu';
 import { ProjectCard } from '@/components/project-card';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Section } from '@/components/ui/section';
 import { RESUME_DATA } from '@/data/resume-data';
+import { cn } from '@/lib/utils';
 import { DownloadIcon, GlobeIcon, MailIcon, PhoneIcon } from 'lucide-react';
 import { Metadata } from 'next';
+import Ul from '@/components/ul';
 
 export const metadata: Metadata = {
   title: `${RESUME_DATA.name} | ${RESUME_DATA.about}`,
@@ -17,7 +26,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <main className="container relative mx-auto scroll-my-12 overflow-auto p-4 print:p-12 md:p-16">
-      <section className="mx-auto w-full max-w-2xl space-y-8 bg-white print:space-y-6">
+      <section className="mx-auto w-full max-w-2xl space-y-4 bg-white print:space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex-1 space-y-1.5">
             <h1 className="text-2xl font-bold">{RESUME_DATA.name}</h1>
@@ -113,22 +122,12 @@ export default function Page() {
           {RESUME_DATA.education.map(education => {
             return (
               <Card key={education.school}>
-                <CardHeader>
-                  <div className="flex items-center justify-between gap-x-2 text-base">
-                    <a
-                      href={education.link}
-                      className="font-semibold leading-none hover:underline"
-                    >
-                      {education.school}
-                    </a>
-                    <div className="text-sm tabular-nums text-gray-500">
-                      {education.start} - {education.end}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="text-sm">
-                  {education.degree}
-                </CardContent>
+                <WorkHeader
+                  title={education.school}
+                  link={education.link}
+                  extra={`${education.start} - ${education.end}`}
+                />
+                <CardContent className="mt-1">{education.degree}</CardContent>
               </Card>
             );
           })}
@@ -138,43 +137,16 @@ export default function Page() {
           {RESUME_DATA.work.map(work => {
             return (
               <Card key={work.company}>
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-x-2 text-base">
-                    <h3 className="inline-flex flex-wrap items-start gap-x-2 gap-y-2 font-semibold leading-none">
-                      <div className="space-y-1">
-                        <a className="hover:underline" href={work.link}>
-                          {work.company}
-                        </a>
-                        <h4 className="font-mono text-sm leading-none">
-                          {work.title}
-                        </h4>
-                      </div>
-                      <span className="inline-flex gap-x-1">
-                        {work.badges.map(badge => (
-                          <Badge
-                            variant="secondary"
-                            className="align-middle text-xs"
-                            key={badge}
-                          >
-                            {badge}
-                          </Badge>
-                        ))}
-                      </span>
-                    </h3>
-                    <div className="whitespace-nowrap text-sm tabular-nums text-gray-500">
-                      {work.start} - {work.end}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="text-sm">
+                <WorkHeader
+                  title={work.company}
+                  subtitle={work.title}
+                  link={work.link}
+                  badges={work.badges}
+                  extra={`${work.start} - ${work.end}`}
+                />
+                <CardContent>
                   {Array.isArray(work.description) ? (
-                    <ul className="ml-4 list-disc">
-                      {work.description.map(description => (
-                        <li className="mt-1" key={description}>
-                          {description}
-                        </li>
-                      ))}
-                    </ul>
+                    <Ul items={work.description} />
                   ) : (
                     work.description
                   )}
@@ -188,43 +160,16 @@ export default function Page() {
           {RESUME_DATA.organisations.map(org => {
             return (
               <Card key={org.name}>
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-x-2 text-base">
-                    <h3 className="inline-flex flex-wrap items-start gap-x-1 gap-y-2 font-semibold leading-none">
-                      <div className="space-y-1">
-                        <a className="hover:underline" href={org.link}>
-                          {org.name}
-                        </a>
-                        <h4 className="font-mono text-sm leading-none">
-                          {org.title}
-                        </h4>
-                      </div>
-                      <span className="inline-flex gap-x-1">
-                        {org.badges.map(badge => (
-                          <Badge
-                            variant="secondary"
-                            className="align-middle text-xs"
-                            key={badge}
-                          >
-                            {badge}
-                          </Badge>
-                        ))}
-                      </span>
-                    </h3>
-                    <div className="whitespace-nowrap text-sm tabular-nums text-gray-500">
-                      {org.start} - {org.end}
-                    </div>
-                  </div>
-                </CardHeader>
+                <WorkHeader
+                  title={org.name}
+                  link={org.link}
+                  subtitle={org.title}
+                  badges={org.badges}
+                  extra={`${org.start} - ${org.end}`}
+                />
                 <CardContent className="text-sm">
                   {Array.isArray(org.description) ? (
-                    <ul className="ml-4 list-disc">
-                      {org.description.map(description => (
-                        <li className="mt-1" key={description}>
-                          {description}
-                        </li>
-                      ))}
-                    </ul>
+                    <Ul items={org.description} />
                   ) : (
                     org.description
                   )}
@@ -245,7 +190,7 @@ export default function Page() {
                         {skill.label}
                       </h3>
                     </CardHeader>
-                    <CardContent className="flex flex-wrap gap-1">
+                    <CardContent className="flex flex-wrap gap-1 mt-2">
                       {skill.skills.map(skill => (
                         <Badge key={skill}>{skill}</Badge>
                       ))}
