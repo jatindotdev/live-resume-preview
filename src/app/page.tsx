@@ -4,16 +4,9 @@ import { ProjectCard } from '@/components/project-card';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Section } from '@/components/ui/section';
 import { RESUME_DATA } from '@/data/resume-data';
-import { cn } from '@/lib/utils';
 import { DownloadIcon, GlobeIcon, MailIcon, PhoneIcon } from 'lucide-react';
 import { Metadata } from 'next';
 import Ul from '@/components/ul';

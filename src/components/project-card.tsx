@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from './ui/card';
+import Ul from './ul';
 
 type Props = ResumeData['projects'][number];
 
@@ -29,7 +30,7 @@ export function ProjectCard({ title, description, techStack, link }: Props) {
               title
             )}
           </CardTitle>
-          <div className="hidden font-mono text-xs underline print:visible">
+          <div className="hidden font-mono text-xs underline print:block">
             {link?.href
               .replace('https://', '')
               .replace('www.', '')
@@ -37,13 +38,7 @@ export function ProjectCard({ title, description, techStack, link }: Props) {
           </div>
           <CardDescription className="font-mono text-xs">
             {Array.isArray(description) ? (
-              <ul className="my-2 ml-4 list-disc">
-                {description.map(description => (
-                  <li className="mt-1" key={description}>
-                    {description}
-                  </li>
-                ))}
-              </ul>
+              <Ul items={description} className="my-2" />
             ) : (
               description
             )}
