@@ -5,6 +5,9 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
+  "organizeImports": {
+    "enabled": false
+  },
   "files": {
     "ignoreUnknown": true,
     "ignore": ["src/components/ui"]
