@@ -47,6 +47,7 @@ export const CommandMenu = ({ links }: Props) => {
         variant={'outline'}
         size={'icon'}
         className="fixed bottom-4 right-4 flex rounded-full shadow-2xl print:hidden xl:hidden"
+        aria-label="Command Menu"
       >
         <CommandIcon className="size-6" />
       </Button>

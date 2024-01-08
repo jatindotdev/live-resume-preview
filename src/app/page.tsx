@@ -45,7 +45,10 @@ export default function Page() {
                   size="icon"
                   asChild
                 >
-                  <a href={`mailto:${RESUME_DATA.contact.email}`}>
+                  <a
+                    href={`mailto:${RESUME_DATA.contact.email}`}
+                    aria-label="email"
+                  >
                     <MailIcon className="size-4" />
                   </a>
                 </Button>
@@ -57,7 +60,10 @@ export default function Page() {
                   size="icon"
                   asChild
                 >
-                  <a href={`tel:${RESUME_DATA.contact.tel}`}>
+                  <a
+                    href={`tel:${RESUME_DATA.contact.tel}`}
+                    aria-label="telephone"
+                  >
                     <PhoneIcon className="size-4" />
                   </a>
                 </Button>
@@ -70,7 +76,12 @@ export default function Page() {
                   size="icon"
                   asChild
                 >
-                  <a href={social.url} target="_blank" rel="noreferrer">
+                  <a
+                    href={social.url}
+                    aria-label={social.name}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <social.icon className="size-4" />
                   </a>
                 </Button>
@@ -81,6 +92,7 @@ export default function Page() {
                   target="_blank"
                   rel="noreferrer"
                   download="jatin-kumar.pdf"
+                  aria-label="download"
                 >
                   <DownloadIcon className="size-4" />
                 </a>
