@@ -5,6 +5,7 @@ export interface ResumeData {
   initials: string;
   location: string;
   locationLink: string;
+  specialisation: string;
   about: string;
   summary: string;
   avatarUrl?: string;

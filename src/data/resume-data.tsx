@@ -2,10 +2,11 @@ import { ResumeData } from '@/lib/types';
 import { GithubIcon, LinkedinIcon, TwitterIcon } from 'lucide-react';
 
 export const RESUME_DATA: ResumeData = {
-  name: 'Jatin Kumar',
+  name: 'Jatin',
   initials: 'JK',
   location: 'Jamshedpur, India',
   locationLink: 'https://www.google.com/maps/place/Chennai',
+  specialisation: 'Software Developer',
   about:
     'Software Developer with experience in various technologies, focused on creating seamless applications.',
   summary:

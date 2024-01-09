@@ -11,11 +11,6 @@ import { DownloadIcon, GlobeIcon, MailIcon, PhoneIcon } from 'lucide-react';
 import { Metadata } from 'next';
 import Ul from '@/components/ul';
 
-export const metadata: Metadata = {
-  title: `${RESUME_DATA.name} | ${RESUME_DATA.about}`,
-  description: RESUME_DATA.summary,
-};
-
 export default function Page() {
   return (
     <main className="container relative mx-auto scroll-my-12 overflow-auto p-4 print:p-0 md:p-16">
