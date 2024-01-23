@@ -130,6 +130,26 @@ export const RESUME_DATA: ResumeData = {
       ],
     },
     {
+      title: 'TinyBits',
+      techStack: [
+        'GoLang',
+        'TypeScript',
+        'Remix',
+        'PostgreSQL',
+        'Redis',
+      ],
+      link: {
+        href: 'https://github.com/jatindotdev/tinybits',
+        label: 'GitHub',
+      },
+      description: [
+        'Developing a URL shortener backend in GoLang, primarily for learning the language for a club project.',
+        'Expanded it into a full-stack application by incorporating Remix.',
+        'Leveraged Redis for caching and PostgreSQL for the database without using an ORM.',
+        'Ongoing development as an open-source project, still a work in progress.'
+      ],
+    },
+    {
       title: 'Chat App',
       techStack: ['HTML', 'CSS', 'Vanilla JS', 'Firebase'],
       description: [
