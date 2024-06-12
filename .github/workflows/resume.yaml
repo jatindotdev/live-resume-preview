@@ -33,6 +33,7 @@ jobs:
         committer: Jatin <heyjatinn@gmail.com>
         author: Jatin <heyjatinn@gmail.com>
         branch: chore/update-resume
+        base: main
         delete-branch: true
         title: 'chore: update resume'
         body: |
