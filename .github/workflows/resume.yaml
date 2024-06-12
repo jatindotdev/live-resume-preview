@@ -13,7 +13,6 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download PDF
-      id: download-pdf
       run: |
         url="https://app.flowcv.com/api/public/download_resume?token=${{ secrets.FLOWCV_TOKEN }}"
         output_file="latest.pdf"
@@ -24,51 +23,11 @@ jobs:
           exit 1
         fi
 
-    - name: Calculate SHA-256 checksum of the downloaded file
-      id: calculate-new-sha
+    - name: Commit and push the new resume
       run: |
-        new_sha=$(sha256sum latest.pdf | awk '{ print $1 }')
-        echo "new_sha=$new_sha" >> $GITHUB_ENV
-
-    - name: Calculate SHA-256 checksum of the existing file
-      id: calculate-existing-sha
-      run: |
-        existing_file="public/jatin-resume.pdf"
-
-        if [ ! -f "$existing_file" ]; then
-          echo "Existing resume file not found!"
-          exit 1
-        fi
-
-        existing_sha=$(sha256sum "$existing_file" | awk '{ print $1 }')
-        echo "existing_sha=$existing_sha" >> $GITHUB_ENV
-
-    - name: Compare SHA-256 checksums
-      id: compare-sha
-      run: |
-        if [ "$new_sha" = "$existing_sha" ]; then
-          echo "SHA-256 checksums match. No update needed."
-          echo "match=true" >> $GITHUB_ENV
-        else
-          echo "SHA-256 checksums do not match. Update needed."
-          echo "match=false" >> $GITHUB_ENV
-        fi
-
-    - name: Upload the new resume
-      if: env.match == 'false'
-      uses: actions/upload-artifact@v4
-      with:
-        name: resume
-        path: |
-          latest.pdf
-          public/jatin-resume.pdf
-
-    # - name: Commit and push the new resume
-    #   if: env.match == 'false'
-    #   run: |
-    #     cp latest.pdf public/jatin-resume.pdf
-    #     git config --global user.name 'Jatin'
-    #     git config --global user.email 'heyjatinn@gmail.com'
-    #     git add public/jatin-resume.pdf
-    #     git commit -m "chore: update resume"
-    #     git push origin HEAD:main
+        cp latest.pdf public/jatin-resume.pdf
+        git config --global user.name 'Jatin'
+        git config --global user.email 'heyjatinn@gmail.com'
+        git add public/jatin-resume.pdf
+        git commit -m "chore: update resume"
+        git push origin HEAD:main
