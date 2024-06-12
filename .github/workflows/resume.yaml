@@ -1,0 +1,64 @@
+name: Update Resume
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  update-resume:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Download PDF
+      id: download-pdf
+      run: |
+        url="https://app.flowcv.com/api/public/download_resume?token=${{ secrets.FLOWCV_TOKEN }}"
+        output_file="latest.pdf"
+
+        # Attempt to download the PDF
+        if ! curl -L -o "$output_file" "$url"; then
+          echo "Failed to download the PDF from $url"
+          exit 1
+        fi
+
+    - name: Calculate SHA-256 checksum of the downloaded file
+      id: calculate-new-sha
+      run: |
+        new_sha=$(sha256sum latest.pdf | awk '{ print $1 }')
+        echo "new_sha=$new_sha" >> $GITHUB_ENV
+
+    - name: Calculate SHA-256 checksum of the existing file
+      id: calculate-existing-sha
+      run: |
+        existing_file="public/jatin-resume.pdf"
+
+        if [ ! -f "$existing_file" ]; then
+          echo "Existing resume file not found!"
+          exit 1
+        fi
+
+        existing_sha=$(sha256sum "$existing_file" | awk '{ print $1 }')
+        echo "existing_sha=$existing_sha" >> $GITHUB_ENV
+
+    - name: Compare SHA-256 checksums
+      id: compare-sha
+      run: |
+        if [ "$new_sha" = "$existing_sha" ]; then
+          echo "SHA-256 checksums match. No update needed."
+          echo "match=true" >> $GITHUB_ENV
+        else
+          echo "SHA-256 checksums do not match. Update needed."
+          echo "match=false" >> $GITHUB_ENV
+
+    - name: Commit and push the new resume
+      if: env.match == 'false'
+      run: |
+        cp latest.pdf public/jatin-resume.pdf
+        git config --global user.name 'Jatin'
+        git config --global user.email 'heyjatinn@gmail.com'
+        git add public/jatin-resume.pdf
+        git commit -m "chore: update resume"
+        git push
