@@ -1,7 +1,6 @@
 name: Update Resume
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:
