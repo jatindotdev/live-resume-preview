@@ -52,6 +52,7 @@ jobs:
         else
           echo "SHA-256 checksums do not match. Update needed."
           echo "match=false" >> $GITHUB_ENV
+        fi
 
     - name: Commit and push the new resume
       if: env.match == 'false'
