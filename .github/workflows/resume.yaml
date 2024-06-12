@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Download PDF
       id: download-pdf
@@ -54,12 +54,21 @@ jobs:
           echo "match=false" >> $GITHUB_ENV
         fi
 
-    - name: Commit and push the new resume
+    - name: Upload the new resume
       if: env.match == 'false'
-      run: |
-        cp latest.pdf public/jatin-resume.pdf
-        git config --global user.name 'Jatin'
-        git config --global user.email 'heyjatinn@gmail.com'
-        git add public/jatin-resume.pdf
-        git commit -m "chore: update resume"
-        git push
+      uses: actions/upload-artifact@v4
+      with:
+        name: resume
+        path: |
+          latest.pdf
+          public/jatin-resume.pdf
+
+    # - name: Commit and push the new resume
+    #   if: env.match == 'false'
+    #   run: |
+    #     cp latest.pdf public/jatin-resume.pdf
+    #     git config --global user.name 'Jatin'
+    #     git config --global user.email 'heyjatinn@gmail.com'
+    #     git add public/jatin-resume.pdf
+    #     git commit -m "chore: update resume"
+    #     git push origin HEAD:main
