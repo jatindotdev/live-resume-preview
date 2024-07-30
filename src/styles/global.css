@@ -1,0 +1,27 @@
+@import url(https://fonts.googleapis.com/css?family=Google+Sans:400,500,600,700);
+
+:root {
+  --bg: 0 0% 99%;
+  --bg-alt: 0 0% 98%;
+  --primary: 0 0% 94%;
+  --primary-hover: 0 0% 91%;
+  --primay-active: 0 0% 88%;
+  --border-disabled: 0 0% 85%;
+  --border: 0 0% 81%;
+  --border-active: 0 0% 73%;
+  --card: 0 0% 55%;
+  --card-hover: 0 0% 51%;
+  --fg-secondary: 0 0% 39%;
+  --fg: 0 0% 13%;
+  --shadow-uniform: 0px 0px 4.5px 0px rgba(120, 120, 120, 0.4);
+}
+
+body {
+  @apply font-sans antialiased bg-bg text-fg;
+}
+
+.annotationLayer :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton)>a:hover {
+  background: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
