@@ -2,7 +2,7 @@ import { defineConfig, presetUno } from 'unocss';
 
 export default defineConfig({
   content: {
-    filesystem: ['./src/**/*.{html,js,ts,jsx,tsx}'],
+    filesystem: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   },
   theme: {
     fontFamily: {
