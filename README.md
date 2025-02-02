@@ -2,6 +2,10 @@
 
 The project aims to provide a live preview of resumes using a modern PDF viewer, allowing you to showcase your resume with a shareable link instead of dealing with cumbersome PDF files.
 
+## Preview
+![cover](https://github.com/user-attachments/assets/f8c8b4df-ddfe-446d-8f07-a28bba19fc56)
+
+
 ## Features
 
 - **Responsive Design**: Optimized for all devices, ensuring your resume looks great on screens of all sizes.
