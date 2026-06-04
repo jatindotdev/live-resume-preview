@@ -15,14 +15,14 @@ It's a fully static, **no-build** site: a single `index.html` plus a small ES mo
 
 ## Project structure
 
-`index.html` is at the repo root; everything else lives in `public/`. Vercel
-serves the contents of `public/` at the site root, so `public/css/viewer.css`
-is requested as `/css/viewer.css`, etc.
+`public/` is the web root: Vercel serves its contents at the site root
+(`outputDirectory: "public"`), so `public/css/viewer.css` is requested as
+`/css/viewer.css`, etc.
 
 ```
-index.html             # page shell: <head> meta, header (avatar + download), viewer container
-vercel.json            # static hosting config (no build; outputDirectory ".")
-public/                # served at the site root (/)
+vercel.json            # static hosting config (no build; outputDirectory "public")
+public/                # the web root — served at /
+  index.html           # page shell: <head> meta, header (avatar + download), viewer container
   css/viewer.css       # styling (centered, capped width, page shadow)
   js/viewer.mjs        # imports pdf.js from the CDN and renders /files/jatin-resume.pdf
   images/profile.png   # avatar + social preview image
@@ -33,12 +33,13 @@ public/                # served at the site root (/)
 
 ## Getting Started
 
-There is no build step or dependency install. Because `index.html` is at the
-root while assets live in `public/` (served at `/`), use `vercel dev` for a
-faithful local preview:
+There is no build step or dependency install. Serve the `public/` directory
+(the web root) with any static file server:
 
 ```sh
-npx vercel dev
+npx serve public
+# or
+python3 -m http.server 8000 --directory public
 ```
 
 Then open the printed URL.
