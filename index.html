@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Software Developer" />
+    <title>Jatin — Software Developer</title>
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/images/profile.png" as="image" />
+    <link rel="preload" href="/files/jatin-resume.pdf" as="fetch" crossorigin />
+
+    <!-- Typefaces: Fraunces (display serif wordmark) + Hanken Grotesk (UI). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- OpenGraph tags -->
+    <meta name="og:title" content="Jatin — Software Developer" />
+    <meta property="og:title" content="Jatin — Software Developer" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:description" content="Software Developer" />
+    <meta property="og:site_name" content="Jatin" />
+    <meta property="og:url" content="https://cv.jatinkumar.dev" />
+    <meta
+      property="og:image"
+      content="https://cv.jatinkumar.dev/images/profile.png"
+    />
+
+    <!-- Twitter tags -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@whynotjatin" />
+    <meta name="twitter:title" content="Jatin — Software Developer" />
+    <meta name="twitter:description" content="Software Developer" />
+    <meta
+      name="twitter:image"
+      content="https://cv.jatinkumar.dev/images/profile.png"
+    />
+
+    <meta name="theme-color" content="#e8e4db" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/pdfjs-dist@6.0.227/web/pdf_viewer.css"
+    />
+    <link rel="stylesheet" href="/css/viewer.css" />
+  </head>
+
+  <body>
+    <!-- The header lives inside the scroll container so it scrolls away
+         with the document (not pinned). #viewer is passed to PDFViewer
+         explicitly, so it doesn't matter that it isn't the first child. -->
+    <div id="viewerContainer">
+      <header>
+        <a class="brand" href="https://jatinkumar.dev" aria-label="Home">
+          <span class="brand__avatar">
+            <img src="/images/profile.png" alt="Jatin" width="40" height="40" />
+          </span>
+          <span class="brand__text">
+            <span class="brand__name">Jatin</span>
+            <span class="brand__role">Software&nbsp;Developer</span>
+          </span>
+        </a>
+
+        <a
+          class="dl"
+          href="/files/jatin-resume.pdf"
+          download="jatin-resume.pdf"
+          title="Download PDF"
+        >
+          <span class="dl__label">Résumé</span>
+          <svg
+            class="dl__icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 3v13m0 0l4-4.375M12 16l-4-4.375M15 21H9c-2.828 0-4.243 0-5.121-.879C3 19.243 3 17.828 3 15m18 0c0 2.828 0 4.243-.879 5.121c-.3.3-.662.498-1.121.628"
+            />
+          </svg>
+        </a>
+      </header>
+
+      <div id="viewer" class="pdfViewer"></div>
+    </div>
+
+    <script type="module" src="/js/viewer.mjs"></script>
+  </body>
+</html>

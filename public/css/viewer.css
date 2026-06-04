@@ -1,0 +1,253 @@
+/* ────────────────────────────────────────────────────────────────────────
+   Jatin — résumé viewer
+   Aesthetic: refined editorial / archival document reader.
+   A warm paper field, a white sheet floating on a layered shadow, a
+   characterful serif wordmark. The document is the hero; the chrome is quiet.
+   ──────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg: #e7e3d9; /* warm greige field            */
+  --bg-2: #efece4; /* lighter centre (vignette)    */
+  --bg-edge: #dbd6c9; /* deeper edge (vignette)       */
+  --ink: #211c16; /* warm near-black              */
+  --ink-soft: #50473b;
+  --muted: #978c79;
+  --line: rgba(33, 28, 22, 0.13);
+  --accent: #9a3412; /* burnt sienna, used sparingly */
+  --accent-soft: rgba(154, 52, 18, 0.14);
+
+  --page-max: 768px;
+  /* pdf.js subtracts SCROLLBAR_PADDING (40px) from the container when fitting
+     to page-width, so a container capped 40px wider lands the page at 768px
+     and leaves a natural 20px gutter on each side. */
+  --rail-max: 808px;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden; /* the viewer container is the scroller */
+  color: var(--ink);
+  font-family: "Hanken Grotesk", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background-color: var(--bg);
+  background-image: radial-gradient(
+    135% 90% at 50% -10%,
+    var(--bg-2) 0%,
+    var(--bg) 52%,
+    var(--bg-edge) 100%
+  );
+}
+
+/* Faint paper grain over the field for depth (skips behind the white sheet). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Scroll container ──────────────────────────────────────────────────────
+   PDFViewer requires this to be absolutely positioned. Capped + centred so
+   the page renders at full size without going full-bleed on wide screens. */
+#viewerContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: var(--rail-max);
+  margin-inline: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+#viewerContainer::-webkit-scrollbar {
+  width: 11px;
+}
+#viewerContainer::-webkit-scrollbar-thumb {
+  background: var(--line);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 11px;
+}
+#viewerContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+  background-clip: content-box;
+}
+
+/* ── Header (scrolls away with the document; not pinned) ──────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  /* 20px inline padding aligns the header content with the page edges. */
+  padding: clamp(1rem, 1rem + 1.5vw, 1.75rem) 20px clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: inherit;
+  animation: rise-in 0.6s var(--ease) both;
+}
+
+.brand__avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--line), 0 2px 6px rgba(33, 28, 22, 0.12);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.brand:hover .brand__avatar {
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(33, 28, 22, 0.18);
+}
+.brand__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.brand__name {
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: -0.015em;
+}
+.brand__role {
+  margin-top: 0.34rem;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Download control: a quiet hairline tag that inks in on hover. */
+.dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem 0.5rem 0.95rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(33, 28, 22, 0.05);
+  transition: color 0.25s var(--ease), background 0.25s var(--ease),
+    border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  animation: rise-in 0.6s var(--ease) 0.08s both;
+}
+.dl:hover {
+  color: #fdfcf8;
+  background: var(--ink);
+  border-color: var(--ink);
+  transform: translateY(-1px);
+}
+.dl__icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  transition: transform 0.28s var(--ease);
+}
+.dl:hover .dl__icon {
+  transform: translateY(3px);
+}
+
+/* ── The page sheet ───────────────────────────────────────────────────────
+   Override pdf.js' default page border/margins with a hairline-framed white
+   sheet floating on a layered, realistic drop shadow. */
+.pdfViewer .page {
+  margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(33, 28, 22, 0.04),
+    0 5px 10px rgba(33, 28, 22, 0.06), 0 16px 30px rgba(33, 28, 22, 0.09),
+    0 36px 60px rgba(33, 28, 22, 0.08);
+  animation: page-rise 0.75s var(--ease) 0.12s both;
+}
+.pdfViewer .page:first-of-type {
+  margin-top: 0.25rem;
+}
+
+/* Editorial text selection + invisible-until-hover link annotations. */
+.textLayer ::selection {
+  background: var(--accent-soft);
+}
+.annotationLayer
+  :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton)
+  > a:hover {
+  background: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────────── */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.992);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
