@@ -47,8 +47,6 @@
 }
 
 :root {
-  --page-max: 768px;
-  --rail-max: 808px; /* page-max + pdf.js' 40px page-width padding */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -90,16 +88,12 @@ body::before {
 }
 
 /* ── Scroll container ──────────────────────────────────────────────────────
-   PDFViewer requires this to be absolutely positioned. Capped + centred so
-   the page renders at full size without going full-bleed on wide screens.
-   Scrollbar hidden (still scrolls). */
+   PDFViewer requires this to be absolutely positioned. Spans the full
+   viewport, so the page fits to the whole window width. Scrollbar hidden
+   (still scrolls); auto-x lets a zoomed-in page pan horizontally. */
 #viewerContainer {
   position: absolute;
   inset: 0;
-  width: 100%;
-  max-width: var(--rail-max);
-  margin-inline: auto;
-  /* auto-x so a zoomed-in (wider-than-container) page can pan horizontally */
   overflow: auto;
   overscroll-behavior: contain;
   /* Let us handle pinch as native zoom; the browser keeps 1-finger panning. */

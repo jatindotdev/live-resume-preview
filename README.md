@@ -21,7 +21,7 @@ Everything is served from the repo root (`outputDirectory: "."`), so
 ```
 index.html             # page shell: <head> meta, header (theme + download), viewer container
 vercel.json            # static hosting config (no build; outputDirectory ".")
-css/viewer.css         # styling (centered, capped width, page shadow, light/dark)
+css/viewer.css         # styling (full-width page, shadow, light/dark)
 js/viewer.mjs          # imports pdf.js from the CDN and renders /files/jatin-resume.pdf
 images/profile.png     # avatar + social preview image
 files/jatin-resume.pdf
