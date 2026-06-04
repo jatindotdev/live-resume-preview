@@ -204,48 +204,15 @@ header {
   height: 1.15rem;
 }
 
-/* Sun shows in dark (→ go light); moon shows in light (→ go dark). */
-.theme-toggle .icon-sun {
+/* The toggle shows the icon of the CURRENT mode (system | light | dark);
+   clicking cycles to the next. */
+.theme-toggle svg {
   display: none;
 }
-:root[data-theme="dark"] .theme-toggle .icon-sun {
+:root[data-theme-choice="system"] .theme-toggle .icon-system,
+:root[data-theme-choice="light"] .theme-toggle .icon-sun,
+:root[data-theme-choice="dark"] .theme-toggle .icon-moon {
   display: block;
-}
-:root[data-theme="dark"] .theme-toggle .icon-moon {
-  display: none;
-}
-
-/* Download control: a quiet hairline tag that inks in on hover. */
-.dl {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.8rem 0.5rem 0.95rem;
-  font-size: 0.74rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--ink);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  transition: color 0.25s var(--ease), background 0.25s var(--ease),
-    border-color 0.25s var(--ease), transform 0.25s var(--ease);
-}
-.dl:hover {
-  color: var(--bg);
-  background: var(--ink);
-  border-color: var(--ink);
-  transform: translateY(-1px);
-}
-.dl__icon {
-  width: 1.05rem;
-  height: 1.05rem;
-  transition: transform 0.28s var(--ease);
-}
-.dl:hover .dl__icon {
-  transform: translateY(3px);
 }
 
 /* ── The page sheet ───────────────────────────────────────────────────────

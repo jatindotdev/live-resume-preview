@@ -6,16 +6,22 @@
     <meta name="description" content="Software Developer" />
     <title>Jatin — Software Developer</title>
 
-    <!-- Resolve theme before paint (no flash): saved choice, else system. -->
+    <!-- Resolve theme before paint (no flash). Choice is system|light|dark;
+         "system" follows the OS preference. data-theme drives colours,
+         data-theme-choice drives which toggle icon shows. -->
     <script>
       (function () {
         try {
-          var t =
-            localStorage.getItem("theme") ||
-            (matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light");
-          document.documentElement.dataset.theme = t;
+          var r = document.documentElement;
+          var choice = localStorage.getItem("theme") || "system";
+          var resolved =
+            choice === "system"
+              ? matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+              : choice;
+          r.dataset.theme = resolved;
+          r.dataset.themeChoice = choice;
         } catch (e) {}
       })();
     </script>
@@ -88,9 +94,23 @@
           <button
             class="icon-btn theme-toggle"
             type="button"
-            aria-label="Toggle colour theme"
-            title="Toggle theme"
+            aria-label="Colour theme"
+            title="Theme"
           >
+            <svg
+              class="icon-system"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <path d="M8 21h8M12 17v4" />
+            </svg>
             <svg
               class="icon-moon"
               xmlns="http://www.w3.org/2000/svg"
@@ -122,14 +142,13 @@
           </button>
 
           <a
-            class="dl"
+            class="icon-btn"
             href="/files/jatin-resume.pdf"
             download="jatin-resume.pdf"
-            title="Download PDF"
+            title="Download résumé"
+            aria-label="Download résumé"
           >
-            <span class="dl__label">Résumé</span>
             <svg
-              class="dl__icon"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               aria-hidden="true"

@@ -18,19 +18,45 @@ GlobalWorkerOptions.workerSrc =
 
 const PDF_URL = "/files/jatin-resume.pdf";
 
-// Theme toggle. The initial theme is set before paint by an inline script in
-// index.html; here we just flip + persist it on click.
+// Theme: tri-state choice (system | light | dark). The initial state is set
+// before paint by an inline script in index.html; here we cycle + persist it,
+// resolve "system" against the OS preference, and keep it live.
 const root = document.documentElement;
 const themeColor = document.querySelector('meta[name="theme-color"]');
-document.querySelector(".theme-toggle")?.addEventListener("click", () => {
-  const next = root.dataset.theme === "dark" ? "light" : "dark";
-  root.dataset.theme = next;
-  try {
-    localStorage.setItem("theme", next);
-  } catch {}
+const toggle = document.querySelector(".theme-toggle");
+const THEME_ORDER = ["system", "light", "dark"];
+const prefersDark = matchMedia("(prefers-color-scheme: dark)");
+
+function applyTheme(choice, persist) {
+  const resolved =
+    choice === "system" ? (prefersDark.matches ? "dark" : "light") : choice;
+  root.dataset.themeChoice = choice;
+  root.dataset.theme = resolved;
   if (themeColor) {
-    themeColor.content = next === "dark" ? "#16130f" : "#ece8df";
+    themeColor.content = resolved === "dark" ? "#16130f" : "#ece8df";
   }
+  if (toggle) {
+    toggle.title = `Theme: ${choice}`;
+    toggle.setAttribute("aria-label", `Theme: ${choice} (click to change)`);
+  }
+  if (persist) {
+    try {
+      localStorage.setItem("theme", choice);
+    } catch {}
+  }
+}
+
+// Follow the OS preference live while in "system" mode.
+prefersDark.addEventListener("change", () => {
+  if ((root.dataset.themeChoice || "system") === "system") {
+    applyTheme("system", false);
+  }
+});
+
+applyTheme(root.dataset.themeChoice || "system", false);
+toggle?.addEventListener("click", () => {
+  const cur = root.dataset.themeChoice || "system";
+  applyTheme(THEME_ORDER[(THEME_ORDER.indexOf(cur) + 1) % 3], true);
 });
 
 const container = document.getElementById("viewerContainer");
