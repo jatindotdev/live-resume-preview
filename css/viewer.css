@@ -47,6 +47,8 @@
 }
 
 :root {
+  --header-height: 64px;
+  --content-max: 768px; /* page + header content cap at default zoom */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -88,12 +90,15 @@ body::before {
 }
 
 /* ── Scroll container ──────────────────────────────────────────────────────
-   PDFViewer requires this to be absolutely positioned. Spans the full
-   viewport, so the page fits to the whole window width. Scrollbar hidden
-   (still scrolls); auto-x lets a zoomed-in page pan horizontally. */
+   PDFViewer requires this to be absolutely positioned. Spans the full viewport
+   width (below the fixed header) so a zoomed-in page can pan; the page itself
+   is capped to --content-max at default zoom (in JS). Scrollbar hidden (still
+   scrolls); auto-x lets a zoomed-in page pan horizontally. */
 #viewerContainer {
   position: absolute;
-  inset: 0;
+  top: var(--header-height);
+  inset-inline: 0;
+  bottom: 0;
   overflow: auto;
   overscroll-behavior: contain;
   /* Let us handle pinch as native zoom; the browser keeps 1-finger panning. */
@@ -108,18 +113,30 @@ body::before {
 }
 
 /* ── Header ────────────────────────────────────────────────────────────────
-   Scrolls away vertically with the document, but stays pinned horizontally
-   (sticky left) so a zoomed-in, horizontally-scrolled page doesn't drag it. */
+   A frosted bar fixed to the top of the viewport (outside the scroll
+   container), so it's pinned and never dragged by page scroll/zoom. Its inner
+   content is capped to --content-max and centred to line up with the page. */
 header {
-  position: sticky;
-  left: 0;
-  z-index: 2;
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  -webkit-backdrop-filter: saturate(1.1) blur(12px);
+  backdrop-filter: saturate(1.1) blur(12px);
+  transition: background-color 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+
+.header__inner {
+  /* matches the page width: capped at --content-max, 16px gutters when narrow */
+  width: min(var(--content-max), 100% - 32px);
+  height: 100%;
+  margin-inline: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  /* 20px inline padding aligns the header content with the page edges. */
-  padding: clamp(1rem, 1rem + 1.5vw, 1.75rem) 20px clamp(0.85rem, 2vw, 1.25rem);
 }
 
 .brand {
@@ -230,7 +247,7 @@ header {
   transition: box-shadow 0.45s var(--ease), border-color 0.45s var(--ease);
 }
 .pdfViewer .page:first-of-type {
-  margin-top: 0.25rem;
+  margin-top: clamp(1rem, 3vw, 1.75rem);
 }
 
 /* Editorial text selection + invisible-until-hover link annotations. */

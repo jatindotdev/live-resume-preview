@@ -76,35 +76,52 @@ const pdfViewer = new PDFViewer({
 });
 linkService.setViewer(pdfViewer);
 
-// The default ("fit page width") scale — used on load, on resize, and on reset.
-const DEFAULT_SCALE_VALUE = "page-width";
-
-// Fit-to-width is the zoom floor: you can zoom in from it but never below it
-// (no point shrinking the résumé narrower than the column). It depends on the
-// container width, so it's (re)computed on load and on resize.
+// At default ("100%") zoom the page is capped at 768px wide and centred; the
+// container spans the full viewport so a zoomed-in page can pan. This fit scale
+// is also the zoom floor — you can zoom in from it but never below it.
+const MAX_PAGE_WIDTH = 768;
+const SIDE_GUTTER = 16; // each side, when the viewport is narrower than the cap
 let minScale = 0;
-function computeMinScale() {
-  const page = document.querySelector(".pdfViewer .page");
-  if (!page || !pdfViewer.currentScale) {
-    return minScale;
+let fitScale = 0;
+let unscaledWidth = 0; // the page's CSS width at scale 1 (constant per document)
+
+function computeFit() {
+  if (!unscaledWidth) {
+    // Read the page's intrinsic CSS width straight from pdf.js (width / scale);
+    // this is timing-independent, unlike measuring the DOM after a scale change.
+    const pv = pdfViewer.getPageView?.(0);
+    if (pv?.width && pv?.scale) {
+      unscaledWidth = pv.width / pv.scale;
+    }
   }
-  const unscaledWidth =
-    page.getBoundingClientRect().width / pdfViewer.currentScale;
-  return (container.clientWidth - 40) / unscaledWidth; // 40 = page-width padding
+  if (!unscaledWidth) {
+    return pdfViewer.currentScale || 1;
+  }
+  const target = Math.min(MAX_PAGE_WIDTH, container.clientWidth - 2 * SIDE_GUTTER);
+  return target / unscaledWidth;
+}
+
+// (Re)fit to the capped width. `force` always applies it; otherwise it's only
+// re-applied when the user hasn't manually zoomed away from the previous fit.
+function refit(force) {
+  if (!pdfViewer.pdfDocument) {
+    return;
+  }
+  const wasAtFit = fitScale && Math.abs(pdfViewer.currentScale - fitScale) < 1e-3;
+  fitScale = computeFit();
+  minScale = fitScale;
+  if (force || wasAtFit) {
+    pdfViewer.currentScale = fitScale;
+  }
 }
 
 eventBus.on("pagesinit", () => {
-  pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE;
-  minScale = pdfViewer.currentScale;
-  // Applying the scale scrolls the first page into view (past the header);
-  // snap back to the top so the header is visible on load.
+  refit(true);
   requestAnimationFrame(() => {
     container.scrollTop = 0;
   });
 });
 
-// Re-fit on resize. Re-applying currentScaleValue refits a named value
-// ("page-width") while leaving an explicit numeric zoom untouched.
 let resizeRaf = 0;
 window.addEventListener("resize", () => {
   if (resizeRaf) {
@@ -112,10 +129,7 @@ window.addEventListener("resize", () => {
   }
   resizeRaf = requestAnimationFrame(() => {
     resizeRaf = 0;
-    if (pdfViewer.pdfDocument) {
-      pdfViewer.currentScaleValue = pdfViewer.currentScaleValue;
-      minScale = computeMinScale();
-    }
+    refit(false);
   });
 });
 
@@ -135,7 +149,7 @@ function applyZoom({ steps = null, scaleFactor = null, origin }) {
   }
   pdfViewer.updateScale({ steps, scaleFactor, origin, drawingDelay: ZOOM_DELAY });
   if (minScale && pdfViewer.currentScale < minScale) {
-    pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE; // clamp back up to fit
+    pdfViewer.currentScale = minScale; // clamp back up to the fit floor
   }
 }
 
@@ -235,7 +249,7 @@ addEventListener("keydown", evt => {
       break;
     case "0":
       evt.preventDefault();
-      pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE;
+      refit(true);
       break;
   }
 });

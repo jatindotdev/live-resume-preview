@@ -89,11 +89,10 @@
   </head>
 
   <body>
-    <!-- The header lives inside the scroll container so it scrolls away
-         with the document (not pinned). #viewer is passed to PDFViewer
-         explicitly, so it doesn't matter that it isn't the first child. -->
-    <div id="viewerContainer">
-      <header>
+    <!-- Header is fixed to the top, outside the scroll container, so it stays
+         pinned and is never dragged when the page scrolls or zooms. -->
+    <header>
+      <div class="header__inner">
         <a class="brand" href="https://jatinkumar.dev" aria-label="Home">
           <span class="brand__avatar">
             <img src="/images/profile.png" alt="Jatin" width="40" height="40" />
@@ -178,8 +177,10 @@
             </svg>
           </a>
         </div>
-      </header>
+      </div>
+    </header>
 
+    <div id="viewerContainer">
       <div id="viewer" class="pdfViewer"></div>
     </div>
 
