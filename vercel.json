@@ -3,5 +3,6 @@
   "framework": null,
   "buildCommand": null,
   "outputDirectory": "public",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [{ "source": "/favicon.ico", "destination": "/icons/favicon.ico" }]
 }
