@@ -113,8 +113,13 @@ body::before {
   display: none;
 }
 
-/* ── Header (scrolls away with the document; not pinned) ──────────────────── */
+/* ── Header ────────────────────────────────────────────────────────────────
+   Scrolls away vertically with the document, but stays pinned horizontally
+   (sticky left) so a zoomed-in, horizontally-scrolled page doesn't drag it. */
 header {
+  position: sticky;
+  left: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;

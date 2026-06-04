@@ -79,8 +79,23 @@ linkService.setViewer(pdfViewer);
 // The default ("fit page width") scale — used on load, on resize, and on reset.
 const DEFAULT_SCALE_VALUE = "page-width";
 
+// Fit-to-width is the zoom floor: you can zoom in from it but never below it
+// (no point shrinking the résumé narrower than the column). It depends on the
+// container width, so it's (re)computed on load and on resize.
+let minScale = 0;
+function computeMinScale() {
+  const page = document.querySelector(".pdfViewer .page");
+  if (!page || !pdfViewer.currentScale) {
+    return minScale;
+  }
+  const unscaledWidth =
+    page.getBoundingClientRect().width / pdfViewer.currentScale;
+  return (container.clientWidth - 40) / unscaledWidth; // 40 = page-width padding
+}
+
 eventBus.on("pagesinit", () => {
   pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE;
+  minScale = pdfViewer.currentScale;
   // Applying the scale scrolls the first page into view (past the header);
   // snap back to the top so the header is visible on load.
   requestAnimationFrame(() => {
@@ -99,6 +114,7 @@ window.addEventListener("resize", () => {
     resizeRaf = 0;
     if (pdfViewer.pdfDocument) {
       pdfViewer.currentScaleValue = pdfViewer.currentScaleValue;
+      minScale = computeMinScale();
     }
   });
 });
@@ -109,6 +125,19 @@ window.addEventListener("resize", () => {
 // the cursor/pinch point) instead of the browser bitmap-scaling it.
 const ZOOM_DELAY = 400; // ms: quick scaled preview, then a sharp re-render
 const zoomAccum = { ticks: 0, factor: 1, touch: 1 };
+
+// Single entry point so every gesture honours the fit-to-width floor.
+function applyZoom({ steps = null, scaleFactor = null, origin }) {
+  const zoomingOut =
+    (steps !== null && steps < 0) || (scaleFactor !== null && scaleFactor < 1);
+  if (zoomingOut && minScale && pdfViewer.currentScale <= minScale + 1e-3) {
+    return; // already at the fit-to-width floor
+  }
+  pdfViewer.updateScale({ steps, scaleFactor, origin, drawingDelay: ZOOM_DELAY });
+  if (minScale && pdfViewer.currentScale < minScale) {
+    pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE; // clamp back up to fit
+  }
+}
 
 function accumulateTicks(ticks, key) {
   if ((zoomAccum[key] > 0 && ticks < 0) || (zoomAccum[key] < 0 && ticks > 0)) {
@@ -173,7 +202,7 @@ addEventListener(
 
     if (isPinch) {
       scaleFactor = accumulateFactor(pdfViewer.currentScale, scaleFactor, "factor");
-      pdfViewer.updateScale({ scaleFactor, origin, drawingDelay: ZOOM_DELAY });
+      applyZoom({ scaleFactor, origin });
       return;
     }
     const delta = normalizeWheelDirection(evt);
@@ -184,7 +213,7 @@ addEventListener(
           ? Math.sign(delta)
           : accumulateTicks(delta, "ticks");
     if (ticks) {
-      pdfViewer.updateScale({ steps: ticks, origin, drawingDelay: ZOOM_DELAY });
+      applyZoom({ steps: ticks, origin });
     }
   },
   { passive: false }
@@ -198,11 +227,11 @@ addEventListener("keydown", evt => {
     case "+":
     case "=":
       evt.preventDefault();
-      pdfViewer.updateScale({ steps: 1 });
+      applyZoom({ steps: 1 });
       break;
     case "-":
       evt.preventDefault();
-      pdfViewer.updateScale({ steps: -1 });
+      applyZoom({ steps: -1 });
       break;
     case "0":
       evt.preventDefault();
@@ -226,7 +255,7 @@ if (pdfjsLib.TouchManager) {
           distance / prevDistance,
           "touch"
         );
-        pdfViewer.updateScale({ scaleFactor, origin, drawingDelay: ZOOM_DELAY });
+        applyZoom({ scaleFactor, origin });
       },
       onPinchEnd: () => {
         zoomAccum.touch = 1;
