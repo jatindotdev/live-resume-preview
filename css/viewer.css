@@ -250,9 +250,17 @@ header {
   margin-top: clamp(1rem, 3vw, 1.75rem);
 }
 
-/* Editorial text selection + invisible-until-hover link annotations. */
-.textLayer ::selection {
-  background: var(--accent-soft);
+/* Editorial text selection — one uniform colour everywhere.
+   NOTE: custom properties (var()) don't resolve inside ::selection, so these
+   use literal colours. The plain rules cover the header/annotation layer; the
+   .textLayer rules override pdf.js' transparent text-layer selection (equal
+   specificity, so ours must come later); the [data-theme="dark"] rules win by
+   specificity in dark mode. */
+::selection {
+  background: rgba(154, 52, 18, 0.4) !important;
+}
+:root[data-theme="dark"] ::selection {
+  background: rgba(216, 120, 63, 0.45) !important;
 }
 .annotationLayer
   :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton)
