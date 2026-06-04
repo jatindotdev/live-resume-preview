@@ -18,6 +18,21 @@ GlobalWorkerOptions.workerSrc =
 
 const PDF_URL = "/files/jatin-resume.pdf";
 
+// Theme toggle. The initial theme is set before paint by an inline script in
+// index.html; here we just flip + persist it on click.
+const root = document.documentElement;
+const themeColor = document.querySelector('meta[name="theme-color"]');
+document.querySelector(".theme-toggle")?.addEventListener("click", () => {
+  const next = root.dataset.theme === "dark" ? "light" : "dark";
+  root.dataset.theme = next;
+  try {
+    localStorage.setItem("theme", next);
+  } catch {}
+  if (themeColor) {
+    themeColor.content = next === "dark" ? "#16130f" : "#ece8df";
+  }
+});
+
 const container = document.getElementById("viewerContainer");
 const eventBus = new EventBus();
 

@@ -6,6 +6,20 @@
     <meta name="description" content="Software Developer" />
     <title>Jatin — Software Developer</title>
 
+    <!-- Resolve theme before paint (no flash): saved choice, else system. -->
+    <script>
+      (function () {
+        try {
+          var t =
+            localStorage.getItem("theme") ||
+            (matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light");
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -45,7 +59,7 @@
       content="https://cv.jatinkumar.dev/images/profile.png"
     />
 
-    <meta name="theme-color" content="#e8e4db" />
+    <meta name="theme-color" content="#ece8df" />
 
     <link
       rel="stylesheet"
@@ -70,29 +84,67 @@
           </span>
         </a>
 
-        <a
-          class="dl"
-          href="/files/jatin-resume.pdf"
-          download="jatin-resume.pdf"
-          title="Download PDF"
-        >
-          <span class="dl__label">Résumé</span>
-          <svg
-            class="dl__icon"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+        <div class="actions">
+          <button
+            class="icon-btn theme-toggle"
+            type="button"
+            aria-label="Toggle colour theme"
+            title="Toggle theme"
           >
-            <path
+            <svg
+              class="icon-moon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M12 3v13m0 0l4-4.375M12 16l-4-4.375M15 21H9c-2.828 0-4.243 0-5.121-.879C3 19.243 3 17.828 3 15m18 0c0 2.828 0 4.243-.879 5.121c-.3.3-.662.498-1.121.628"
-            />
-          </svg>
-        </a>
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+            <svg
+              class="icon-sun"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+          </button>
+
+          <a
+            class="dl"
+            href="/files/jatin-resume.pdf"
+            download="jatin-resume.pdf"
+            title="Download PDF"
+          >
+            <span class="dl__label">Résumé</span>
+            <svg
+              class="dl__icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 3v13m0 0l4-4.375M12 16l-4-4.375M15 21H9c-2.828 0-4.243 0-5.121-.879C3 19.243 3 17.828 3 15m18 0c0 2.828 0 4.243-.879 5.121c-.3.3-.662.498-1.121.628"
+              />
+            </svg>
+          </a>
+        </div>
       </header>
 
       <div id="viewer" class="pdfViewer"></div>
