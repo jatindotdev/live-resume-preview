@@ -15,38 +15,36 @@ It's a fully static, **no-build** site: a single `index.html` plus a small ES mo
 
 ## Project structure
 
-`public/` is the web root: Vercel serves its contents at the site root
-(`outputDirectory: "public"`), so `public/css/viewer.css` is requested as
-`/css/viewer.css`, etc.
+Everything is served from the repo root (`outputDirectory: "."`), so
+`css/viewer.css` is requested as `/css/viewer.css`, etc.
 
 ```
-vercel.json            # static hosting config (no build; outputDirectory "public")
-public/                # the web root — served at /
-  index.html           # page shell: <head> meta, header (avatar + download), viewer container
-  css/viewer.css       # styling (centered, capped width, page shadow)
-  js/viewer.mjs        # imports pdf.js from the CDN and renders /files/jatin-resume.pdf
-  images/profile.png   # avatar + social preview image
-  files/jatin-resume.pdf
-  icons/               # favicon set (favicon.ico, *.png)
-  site.webmanifest     # PWA manifest
+index.html             # page shell: <head> meta, header (theme + download), viewer container
+vercel.json            # static hosting config (no build; outputDirectory ".")
+css/viewer.css         # styling (centered, capped width, page shadow, light/dark)
+js/viewer.mjs          # imports pdf.js from the CDN and renders /files/jatin-resume.pdf
+images/profile.png     # avatar + social preview image
+files/jatin-resume.pdf
+icons/                 # favicon set (favicon.ico, *.png)
+site.webmanifest       # PWA manifest
 ```
 
 ## Getting Started
 
-There is no build step or dependency install. Serve the `public/` directory
-(the web root) with any static file server:
+There is no build step or dependency install. Serve the project root with any
+static file server:
 
 ```sh
-npx serve public
+npx serve
 # or
-python3 -m http.server 8000 --directory public
+python3 -m http.server 8000
 ```
 
 Then open the printed URL.
 
 ## Updating the resume
 
-The resume is compiled from LaTeX (`jatin-resume.tex`). Drop the compiled PDF in as `public/files/jatin-resume.pdf` and commit. The `Update Resume` GitHub Action can also fetch a PDF from FlowCV into `public/files/jatin-resume.pdf` via `workflow_dispatch`.
+The resume is compiled from LaTeX (`jatin-resume.tex`). Drop the compiled PDF in as `files/jatin-resume.pdf` and commit. The `Update Resume` GitHub Action can also fetch a PDF from FlowCV into `files/jatin-resume.pdf` via `workflow_dispatch`.
 
 ## License
 
