@@ -76,9 +76,11 @@ const pdfViewer = new PDFViewer({
 });
 linkService.setViewer(pdfViewer);
 
-// PDFViewer doesn't auto-refit on resize, so re-apply page-width ourselves.
+// The default ("fit page width") scale — used on load, on resize, and on reset.
+const DEFAULT_SCALE_VALUE = "page-width";
+
 eventBus.on("pagesinit", () => {
-  pdfViewer.currentScaleValue = "page-width";
+  pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE;
   // Applying the scale scrolls the first page into view (past the header);
   // snap back to the top so the header is visible on load.
   requestAnimationFrame(() => {
@@ -86,6 +88,8 @@ eventBus.on("pagesinit", () => {
   });
 });
 
+// Re-fit on resize. Re-applying currentScaleValue refits a named value
+// ("page-width") while leaving an explicit numeric zoom untouched.
 let resizeRaf = 0;
 window.addEventListener("resize", () => {
   if (resizeRaf) {
@@ -94,10 +98,144 @@ window.addEventListener("resize", () => {
   resizeRaf = requestAnimationFrame(() => {
     resizeRaf = 0;
     if (pdfViewer.pdfDocument) {
-      pdfViewer.currentScaleValue = "page-width";
+      pdfViewer.currentScaleValue = pdfViewer.currentScaleValue;
     }
   });
 });
+
+// ── Native zoom (re-render at scale), like web/viewer.html ─────────────────
+// Ctrl/⌘ + wheel, trackpad pinch, keyboard (Ctrl/⌘ +/−/0) and touch pinch all
+// drive pdfViewer.updateScale, which re-renders the page crisply (anchored at
+// the cursor/pinch point) instead of the browser bitmap-scaling it.
+const ZOOM_DELAY = 400; // ms: quick scaled preview, then a sharp re-render
+const zoomAccum = { ticks: 0, factor: 1, touch: 1 };
+
+function accumulateTicks(ticks, key) {
+  if ((zoomAccum[key] > 0 && ticks < 0) || (zoomAccum[key] < 0 && ticks > 0)) {
+    zoomAccum[key] = 0;
+  }
+  zoomAccum[key] += ticks;
+  const whole = Math.trunc(zoomAccum[key]);
+  zoomAccum[key] -= whole;
+  return whole;
+}
+function accumulateFactor(prevScale, factor, key) {
+  if (factor === 1) {
+    return 1;
+  }
+  if ((zoomAccum[key] > 1 && factor < 1) || (zoomAccum[key] < 1 && factor > 1)) {
+    zoomAccum[key] = 1;
+  }
+  const next =
+    Math.floor(prevScale * factor * zoomAccum[key] * 100) / (100 * prevScale);
+  zoomAccum[key] = factor / next;
+  return next;
+}
+function normalizeWheelDirection(evt) {
+  let delta = Math.hypot(evt.deltaX, evt.deltaY);
+  const angle = Math.atan2(evt.deltaY, evt.deltaX);
+  if (-0.25 * Math.PI < angle && angle < 0.75 * Math.PI) {
+    delta = -delta;
+  }
+  return delta;
+}
+
+// Tell a real Ctrl press apart from a trackpad pinch (which fakes ctrlKey).
+let isCtrlKeyDown = false;
+addEventListener("keydown", e => {
+  if (e.key === "Control") isCtrlKeyDown = true;
+});
+addEventListener("keyup", e => {
+  if (e.key === "Control") isCtrlKeyDown = false;
+});
+
+addEventListener(
+  "wheel",
+  evt => {
+    if (!pdfViewer.pdfDocument) {
+      return;
+    }
+    const deltaMode = evt.deltaMode;
+    let scaleFactor = Math.exp(-evt.deltaY / 100);
+    const isPinch =
+      evt.ctrlKey &&
+      !isCtrlKeyDown &&
+      deltaMode === WheelEvent.DOM_DELTA_PIXEL &&
+      evt.deltaX === 0 &&
+      Math.abs(scaleFactor - 1) < 0.05 &&
+      evt.deltaZ === 0;
+
+    if (!(isPinch || evt.ctrlKey || evt.metaKey)) {
+      return; // plain scroll — let the container scroll normally
+    }
+    evt.preventDefault();
+    const origin = [evt.clientX, evt.clientY];
+
+    if (isPinch) {
+      scaleFactor = accumulateFactor(pdfViewer.currentScale, scaleFactor, "factor");
+      pdfViewer.updateScale({ scaleFactor, origin, drawingDelay: ZOOM_DELAY });
+      return;
+    }
+    const delta = normalizeWheelDirection(evt);
+    const ticks =
+      deltaMode === WheelEvent.DOM_DELTA_PIXEL
+        ? accumulateTicks(delta / 30, "ticks")
+        : Math.abs(delta) >= 1
+          ? Math.sign(delta)
+          : accumulateTicks(delta, "ticks");
+    if (ticks) {
+      pdfViewer.updateScale({ steps: ticks, origin, drawingDelay: ZOOM_DELAY });
+    }
+  },
+  { passive: false }
+);
+
+addEventListener("keydown", evt => {
+  if (!(evt.ctrlKey || evt.metaKey) || evt.altKey || !pdfViewer.pdfDocument) {
+    return;
+  }
+  switch (evt.key) {
+    case "+":
+    case "=":
+      evt.preventDefault();
+      pdfViewer.updateScale({ steps: 1 });
+      break;
+    case "-":
+      evt.preventDefault();
+      pdfViewer.updateScale({ steps: -1 });
+      break;
+    case "0":
+      evt.preventDefault();
+      pdfViewer.currentScaleValue = DEFAULT_SCALE_VALUE;
+      break;
+  }
+});
+
+// Touch pinch (phones/tablets) → native zoom. TouchManager requires a signal.
+if (pdfjsLib.TouchManager) {
+  try {
+    new pdfjsLib.TouchManager({
+      container: window,
+      signal: new AbortController().signal,
+      onPinching: (origin, prevDistance, distance) => {
+        if (!pdfViewer.pdfDocument) {
+          return;
+        }
+        const scaleFactor = accumulateFactor(
+          pdfViewer.currentScale,
+          distance / prevDistance,
+          "touch"
+        );
+        pdfViewer.updateScale({ scaleFactor, origin, drawingDelay: ZOOM_DELAY });
+      },
+      onPinchEnd: () => {
+        zoomAccum.touch = 1;
+      },
+    });
+  } catch {
+    // Pinch is a progressive enhancement; ignore if the API shape changes.
+  }
+}
 
 const loadingTask = getDocument({ url: PDF_URL });
 const pdfDocument = await loadingTask.promise;

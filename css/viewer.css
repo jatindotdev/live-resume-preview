@@ -99,9 +99,11 @@ body::before {
   width: 100%;
   max-width: var(--rail-max);
   margin-inline: auto;
-  overflow-x: hidden;
-  overflow-y: auto;
+  /* auto-x so a zoomed-in (wider-than-container) page can pan horizontally */
+  overflow: auto;
   overscroll-behavior: contain;
+  /* Let us handle pinch as native zoom; the browser keeps 1-finger panning. */
+  touch-action: pan-x pan-y;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* legacy Edge */
 }
