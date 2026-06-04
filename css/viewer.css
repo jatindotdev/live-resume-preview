@@ -250,18 +250,11 @@ header {
   margin-top: clamp(1rem, 3vw, 1.75rem);
 }
 
-/* Editorial text selection — one uniform colour everywhere.
-   NOTE: custom properties (var()) don't resolve inside ::selection, so these
-   use literal colours. The plain rules cover the header/annotation layer; the
-   .textLayer rules override pdf.js' transparent text-layer selection (equal
-   specificity, so ours must come later); the [data-theme="dark"] rules win by
-   specificity in dark mode. */
-::selection {
-  background: rgba(154, 52, 18, 0.4) !important;
-}
-:root[data-theme="dark"] ::selection {
-  background: rgba(216, 120, 63, 0.45) !important;
-}
+/* Text selection: intentionally NOT customised. pdf.js' text-layer spans
+   overlap slightly, so a custom semi-transparent ::selection gets painted
+   per-span and the alpha doubles at the seams (showing two shades). Leaving
+   it to the browser's unified default highlight keeps it one clean colour —
+   the same approach web/viewer.html uses. */
 .annotationLayer
   :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton)
   > a:hover {
