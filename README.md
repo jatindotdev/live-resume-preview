@@ -27,7 +27,7 @@ public/                # the web root — served at /
   js/viewer.mjs        # imports pdf.js from the CDN and renders /files/jatin-resume.pdf
   images/profile.png   # avatar + social preview image
   files/jatin-resume.pdf
-  favicon.ico, *.png   # favicon set (served at /)
+  icons/               # favicon set (favicon.ico, *.png)
   site.webmanifest     # PWA manifest
 ```
 
